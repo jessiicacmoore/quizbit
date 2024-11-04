@@ -16,15 +16,34 @@ const StyledQuiz = styled.div`
 
 function Quiz () {
   const [selectedCategory, setSelectedCategory] = useState(undefined);
+  const [questions, setQuestions] = useState([]);
+  const [isFetching, setIsFetching] = useState(false);
   
-  function handleSelectCategory (category) {
+  async function handleSelectCategory (category) {
     setSelectedCategory(category);
+    setIsFetching(true);
+
+    const res = await fetch(`https://opentdb.com/api.php?amount=10&category=${category.id}&difficulty=easy&type=multiple`);
+    const resData = await res.json();
+
+    setQuestions(resData.results);
+    setIsFetching(false);
+  }
+
+  if (!selectedCategory) {
+    return (
+      <StyledQuiz>
+        <Categories onSelectCategory={handleSelectCategory} />
+      </StyledQuiz>
+    )
   }
 
   return (
     <StyledQuiz>
-      {!selectedCategory && <Categories onSelectCategory={handleSelectCategory}  />}
-      {selectedCategory && <h2>Category: {selectedCategory.name}</h2>}
+      {isFetching
+        ? <h2>Loading questions from {selectedCategory.name}</h2>
+        : <h2>Questions: {questions.map((question, index) => <p key={index}>{question.question}</p>)}</h2>
+      }
     </StyledQuiz>
   );
 }
