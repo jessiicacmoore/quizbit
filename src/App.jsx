@@ -1,8 +1,4 @@
-import { useState } from 'react'
 import { createGlobalStyle } from 'styled-components'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
 
 import Header from '@/components/Header'
 import Quiz from '@/components/Quiz'
@@ -23,8 +19,6 @@ const GlobalStyle = createGlobalStyle`
 `
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
     <>
       <GlobalStyle />
