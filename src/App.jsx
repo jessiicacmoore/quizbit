@@ -3,8 +3,6 @@ import { createGlobalStyle } from 'styled-components'
 import Header from '@/components/Header'
 import Quiz from '@/components/Quiz'
 
-import { AVAILABLE_CATEGORIES } from '@/constants/categories.js';
-
 const GlobalStyle = createGlobalStyle`
   body {
     font-size: 1.25rem;

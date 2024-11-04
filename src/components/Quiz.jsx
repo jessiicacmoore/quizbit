@@ -1,4 +1,7 @@
+import { useState } from 'react';
+
 import styled from 'styled-components';
+import Categories from '@/components/Categories';
 
 const StyledQuiz = styled.div`
   background-color: #1d1a39;
@@ -12,9 +15,16 @@ const StyledQuiz = styled.div`
 `
 
 function Quiz () {
+  const [selectedCategory, setSelectedCategory] = useState(undefined);
+  
+  function handleSelectCategory (category) {
+    setSelectedCategory(category);
+  }
+
   return (
     <StyledQuiz>
-      <h2>Quiz goes here</h2>
+      {!selectedCategory && <Categories onSelectCategory={handleSelectCategory}  />}
+      {selectedCategory && <h2>Category: {selectedCategory.name}</h2>}
     </StyledQuiz>
   );
 }
