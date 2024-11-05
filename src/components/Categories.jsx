@@ -1,37 +1,22 @@
-import styled from 'styled-components';
+import Heading from '@/components/common/Heading';
+import List from '@/components/common/List';
+import Button from '@/components/common/Button';
 import { AVAILABLE_CATEGORIES } from '@/constants/categories.js';
-
-const StyledList = styled.ul`
-  list-style: none;
-  padding: 0;  
-`;
-
-const StyledButton = styled.button`
-  display: inline-block;
-  width: 100%;
-  font-size: 1rem;
-  font-weight: 700;
-  padding: 1rem 2rem;
-  border-radius: 2rem;
-  cursor: pointer;
-  background-color: #f39f5a;
-  color: #1d1a39;
-`;
 
 function Categories({ onSelectCategory }) {
   return ( 
     <>
-      <h2>Pick a Category:</h2>
-      <StyledList>
+      <Heading>Pick a Category:</Heading>
+      <List className="category-list">
         {AVAILABLE_CATEGORIES.map((category) => {
           return (
             <li key={category.id}>
-              <StyledButton onClick={() => onSelectCategory(category)}>{category.name}</StyledButton>
+              <Button className='btn category-btn' onClick={() => onSelectCategory(category)}>{category.name}</Button>
             </li>
           )
         })
         }
-      </StyledList>
+      </List>
     </>
    );
 }

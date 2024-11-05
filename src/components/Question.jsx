@@ -1,46 +1,58 @@
-import { useState } from 'react';
-import styled from 'styled-components';
+import { useState, useEffect } from 'react';
+import Heading from '@/components/common/Heading';
+import Answers from '@/components/Answers';
 
-const StyledList = styled.ul`
-  list-style: none;
-  padding: 0;  
-`;
-
-const StyledButton = styled.button`
-  display: inline-block;
-  width: 100%;
-  font-size: 1rem;
-  font-weight: 700;
-  padding: 1rem 2rem;
-  border-radius: 2rem;
-  cursor: pointer;
-  background-color: #f39f5a;
-  color: #1d1a39;
-`;
-
-function Question({ activeQuestion }) {
+function Question({ activeQuestion, onSelectAnswer }) {
   const [userAnswer, setUserAnswer] = useState({
     selectedAnswer: '',
     isCorrect: null
   });
 
-  const {question, answers } = activeQuestion;
+  useEffect(() => {
+    setUserAnswer({ selectedAnswer: '', isCorrect: null });
+  }, [activeQuestion]);
 
-  return ( 
+  const {question, correctAnswer, answers } = activeQuestion;
+
+  function handleSelectAnswer (answer) {
+    setUserAnswer({
+      selectedAnswer: answer,
+      isCorrect: null
+    });
+
+    // Force small delay before showing result
+    setTimeout(() => {
+      setUserAnswer({
+        selectedAnswer: answer,
+        isCorrect: correctAnswer === answer
+      });
+
+      // Force another small delay for user to see result before moving to next question
+      setTimeout(() => {
+        onSelectAnswer(answer);
+      }, 1000);
+    }, 1000)
+  }
+
+  let answeredState = '';
+
+  if (userAnswer.selectedAnswer && userAnswer.isCorrect !== null) {
+    answeredState = userAnswer.isCorrect ? 'correct' : 'wrong';
+  } else if (userAnswer.selectedAnswer) {
+    answeredState = 'answered';
+  }
+
+  return (
     <>
-      <h2>{activeQuestion.question}</h2>
-      <StyledList>
-        {answers.map((answer) => {
-          return (
-            <li key={answer.id}>
-              <StyledButton>{answer}</StyledButton>
-            </li>
-          )
-        })
-        }
-      </StyledList>
+      <Heading>{question}</Heading>
+      <Answers
+        answers={answers}
+        answeredState={answeredState}
+        userAnswer={userAnswer}
+        onSelect={handleSelectAnswer}
+      />
     </>
-   );
+  );
 }
 
 export default Question;

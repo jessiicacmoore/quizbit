@@ -60,6 +60,12 @@ function Quiz () {
     console.log('Questions', decodedQuestions);
   }
 
+  function handleSelectAnswer(selectedAnswer) {
+    setUserAnswers((prevUserAnswers) => {
+      return [...prevUserAnswers, selectedAnswer]
+    });
+  }
+
   if (!selectedCategory) {
     return (
       <StyledQuiz>
@@ -72,7 +78,7 @@ function Quiz () {
     <StyledQuiz>
       {isFetching
         ? <h2>Loading questions from {selectedCategory.name}</h2>
-        : <Question activeQuestion={questions[activeQuestionIndex]} />
+        : <Question activeQuestion={questions[activeQuestionIndex]} onSelectAnswer={handleSelectAnswer} />
       }
     </StyledQuiz>
   );
