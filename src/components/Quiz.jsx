@@ -23,28 +23,41 @@ function Quiz () {
   const [isFetching, setIsFetching] = useState(false);
 
   const activeQuestionIndex = userAnswers.length;
+
+  async function fetchQuestions (categoryId) {
+    const res = await fetch(`https://opentdb.com/api.php?amount=10&category=${categoryId}&difficulty=easy&type=multiple`);
+    const resData = await res.json();
+
+    return resData.results;
+  }
+
+  function shuffleArray(array) {
+    return array.sort(() => Math.random() - 0.5);
+  }
   
   async function handleSelectCategory (category) {
-    let decodedQuestions;
-
     setSelectedCategory(category);
     setIsFetching(true);
 
-    const res = await fetch(`https://opentdb.com/api.php?amount=10&category=${category.id}&difficulty=easy&type=multiple`);
-    const resData = await res.json();
+    const fetchedQuestions = await fetchQuestions(category.id);
 
-    decodedQuestions = resData.results.map((question, index) => {
-      let decodedIncorrectAnswers = question.incorrect_answers.map((encodedAnswer) => decode(encodedAnswer));
+    const decodedQuestions = fetchedQuestions.map((question, index) => {
+      const decodedIncorrectAnswers = question.incorrect_answers.map(decode);
+      const answers = shuffleArray([decode(question.correct_answer), ...decodedIncorrectAnswers]);
     
       return {
         id: index,
         question: decode(question.question),
-        answers: [decode(question.correct_answer), ...decodedIncorrectAnswers]
+        correctAnswer: decode(question.correct_answer),
+        answers
       }
     });
 
     setQuestions(decodedQuestions);
     setIsFetching(false);
+
+    // Cheat sheet because I can't answer these IRL
+    console.log('Questions', decodedQuestions);
   }
 
   if (!selectedCategory) {
