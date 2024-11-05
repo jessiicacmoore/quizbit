@@ -4,6 +4,7 @@ import { decode } from 'html-entities';
 import styled from 'styled-components';
 import Categories from '@/components/Categories';
 import Question from '@/components/Question';
+import Summary from './Summary';
 
 const StyledQuiz = styled.div`
   background-color: #1d1a39;
@@ -11,8 +12,6 @@ const StyledQuiz = styled.div`
   padding: 2rem;
   margin: 0 auto;
   border-radius: 2rem;
-  -webkit-box-shadow: 10px 10px 26px -3px rgba(0,0,0,0.49);
-  -moz-box-shadow: 10px 10px 26px -3px rgba(0,0,0,0.49);
   box-shadow: 10px 10px 26px -3px rgba(0,0,0,0.49);
 `
 async function fetchQuestions (categoryId) {
@@ -33,6 +32,7 @@ function Quiz () {
   const [isFetching, setIsFetching] = useState(false);
 
   const activeQuestionIndex = userAnswers.length;
+  const quizIsComplete = activeQuestionIndex === questions.length;
   
   async function handleSelectCategory (category) {
     setSelectedCategory(category);
@@ -54,9 +54,6 @@ function Quiz () {
 
     setQuestions(decodedQuestions);
     setIsFetching(false);
-
-    // Cheat sheet because I can't answer these IRL
-    console.log('Questions', decodedQuestions);
   }
 
   const handleSelectAnswer = useCallback((selectedAnswer) => {
@@ -69,10 +66,24 @@ function Quiz () {
     handleSelectAnswer(null)
   }, [handleSelectAnswer]);
 
+  function handleReset() {
+    setSelectedCategory(undefined);
+    setUserAnswers([]);
+    setQuestions([]);
+  }
+
   if (!selectedCategory) {
     return (
       <StyledQuiz>
         <Categories onSelectCategory={handleSelectCategory} />
+      </StyledQuiz>
+    )
+  }
+
+  if (quizIsComplete) {
+    return (
+      <StyledQuiz>
+        <Summary userAnswers={userAnswers} questions={questions} onReset={handleReset}/>
       </StyledQuiz>
     )
   }
