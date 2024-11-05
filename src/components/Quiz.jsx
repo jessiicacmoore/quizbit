@@ -15,6 +15,16 @@ const StyledQuiz = styled.div`
   -moz-box-shadow: 10px 10px 26px -3px rgba(0,0,0,0.49);
   box-shadow: 10px 10px 26px -3px rgba(0,0,0,0.49);
 `
+async function fetchQuestions (categoryId) {
+  const res = await fetch(`https://opentdb.com/api.php?amount=10&category=${categoryId}&difficulty=easy&type=multiple`);
+  const resData = await res.json();
+
+  return resData.results;
+}
+
+function shuffleArray(array) {
+  return array.sort(() => Math.random() - 0.5);
+}
 
 function Quiz () {
   const [selectedCategory, setSelectedCategory] = useState(undefined);
@@ -23,17 +33,6 @@ function Quiz () {
   const [isFetching, setIsFetching] = useState(false);
 
   const activeQuestionIndex = userAnswers.length;
-
-  async function fetchQuestions (categoryId) {
-    const res = await fetch(`https://opentdb.com/api.php?amount=10&category=${categoryId}&difficulty=easy&type=multiple`);
-    const resData = await res.json();
-
-    return resData.results;
-  }
-
-  function shuffleArray(array) {
-    return array.sort(() => Math.random() - 0.5);
-  }
   
   async function handleSelectCategory (category) {
     setSelectedCategory(category);
@@ -61,15 +60,12 @@ function Quiz () {
   }
 
   const handleSelectAnswer = useCallback((selectedAnswer) => {
-
-    console.log(selectedAnswer);
     setUserAnswers((prevUserAnswers) => {
       return [...prevUserAnswers, selectedAnswer];
     });
   }, []);
 
   const handleSkipAnswer = useCallback(() => {
-    console.log('handle skip');
     handleSelectAnswer(null)
   }, [handleSelectAnswer]);
 
