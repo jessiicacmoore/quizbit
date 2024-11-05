@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import Heading from '@/components/common/Heading';
 import Answers from '@/components/Answers';
+import TimeoutBar from '@/components/TimeoutBar';
 
-function Question({ activeQuestion, onSelectAnswer }) {
+function Question({ activeQuestion, onSelectAnswer, onSkipAnswer }) {
   const [userAnswer, setUserAnswer] = useState({
     selectedAnswer: '',
     isCorrect: null
@@ -13,6 +14,15 @@ function Question({ activeQuestion, onSelectAnswer }) {
   }, [activeQuestion]);
 
   const {question, correctAnswer, answers } = activeQuestion;
+  let timer = 10000;
+
+  if (userAnswer.selectedAnswer) {
+    timer = 1000;
+  }
+
+  if (userAnswer.isCorrect !== null) {
+    timer = 2000;
+  }
 
   function handleSelectAnswer (answer) {
     setUserAnswer({
@@ -30,7 +40,7 @@ function Question({ activeQuestion, onSelectAnswer }) {
       // Force another small delay for user to see result before moving to next question
       setTimeout(() => {
         onSelectAnswer(answer);
-      }, 1000);
+      }, 2000);
     }, 1000)
   }
 
@@ -44,6 +54,7 @@ function Question({ activeQuestion, onSelectAnswer }) {
 
   return (
     <>
+      <TimeoutBar key={activeQuestion.id} timeout={timer} onTimeout={onSkipAnswer} mode={answeredState} />
       <Heading>{question}</Heading>
       <Answers
         answers={answers}

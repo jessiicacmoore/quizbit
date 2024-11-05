@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { decode } from 'html-entities';
 
 import styled from 'styled-components';
@@ -60,11 +60,18 @@ function Quiz () {
     console.log('Questions', decodedQuestions);
   }
 
-  function handleSelectAnswer(selectedAnswer) {
+  const handleSelectAnswer = useCallback((selectedAnswer) => {
+
+    console.log(selectedAnswer);
     setUserAnswers((prevUserAnswers) => {
-      return [...prevUserAnswers, selectedAnswer]
+      return [...prevUserAnswers, selectedAnswer];
     });
-  }
+  }, []);
+
+  const handleSkipAnswer = useCallback(() => {
+    console.log('handle skip');
+    handleSelectAnswer(null)
+  }, [handleSelectAnswer]);
 
   if (!selectedCategory) {
     return (
@@ -78,7 +85,7 @@ function Quiz () {
     <StyledQuiz>
       {isFetching
         ? <h2>Loading questions from {selectedCategory.name}</h2>
-        : <Question activeQuestion={questions[activeQuestionIndex]} onSelectAnswer={handleSelectAnswer} />
+        : <Question activeQuestion={questions[activeQuestionIndex]} onSelectAnswer={handleSelectAnswer} onSkipAnswer={handleSkipAnswer} />
       }
     </StyledQuiz>
   );
