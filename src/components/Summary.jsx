@@ -2,6 +2,7 @@ import styled from "styled-components";
 import Heading from "@/components/common/Heading";
 import List from "@/components/common/List";
 import Button from "@/components/common/Button";
+import { getAnswerState } from "@/utils/utils";
 
 const StyledAnswer = styled.li`
   background: rgba(232, 188, 185, 0.1);
@@ -27,39 +28,36 @@ const StyledAnswer = styled.li`
 `
 
 function Summary({ userAnswers, questions, onReset }) {
+  console.log(questions);
   return ( 
     <>
       <Heading>Quiz Complete!</Heading>
       <List>
         {userAnswers.map((answer, index) => {
-          const answerState =
-            answer === null
-              ? 'skipped'
-              : answer === questions[index].correctAnswer
-              ? 'correct'
-              : 'wrong';
+          const answerState = getAnswerState(answer, questions[index].correctAnswer);
 
-            return (
-              <StyledAnswer key={index} $mode={answerState} >
-                <h3>{questions[index].question}</h3>
-                {answer && (
-                  <>
-                    <p>
-                      <b>Your answer:</b> {answer}
-                    </p>
-                    <p className="result">
-                      <b>This is {answerState}!</b>
-                    </p>
-                  </>
-                )}
-                {!answer && (
-                  <>
-                    <p>You ran out of time.</p>
-                    <p className="result"><b>The question was skipped!</b></p>
-                  </>
-                )}
-              </StyledAnswer>
-            );
+          return (
+            <StyledAnswer key={index} $mode={answerState}>
+              <h3>{questions[index].question}</h3>
+              {answer !== null ? (
+                <>
+                  <p>
+                    <b>Your answer:</b> {answer}
+                  </p>
+                  <p className="result">
+                    <b>This is {answerState}!</b>
+                  </p>
+                </>
+              ) : (
+                <>
+                  <p>You ran out of time.</p>
+                  <p className="result">
+                    <b>The question was skipped!</b>
+                  </p>
+                </>
+              )}
+            </StyledAnswer>
+          );
         })}
       </List>
       <Button onClick={onReset}>I want to play again!</Button>
