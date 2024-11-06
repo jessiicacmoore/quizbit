@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import { getColorsByMode } from '@/utils/utils';
 
 const StyledProgress = styled.progress`
   border-radius: 0.5rem;
@@ -7,15 +8,7 @@ const StyledProgress = styled.progress`
   height: 1rem;
 
   ${({ $mode }) => {
-    const barColor = $mode === 'answered' ? '#FAD9BD' 
-                  : $mode === 'correct' ? '#D7EED7' 
-                  : $mode === 'wrong' ? '#eb8c95' 
-                  : '#99DBF8';
-                  
-    const valueColor = $mode === 'answered' ? '#f39f5a' 
-                   : $mode === 'correct' ? '#8dcd8d' 
-                   : $mode === 'wrong' ? '#dc3545' 
-                   : '#00a6ed';
+    const { barColor, valueColor } = getColorsByMode($mode);
 
     return `
       &::-webkit-progress-bar {
@@ -49,7 +42,15 @@ function TimeoutBar({ timeout, onTimeout, mode }) {
     };
   }, [timeout, onTimeout]);
 
-  return <StyledProgress $mode={mode} id="timeout-bar" className={mode} max={timeout} value={remainingTime} />;
+  return (
+    <StyledProgress
+      $mode={mode}
+      id="timeout-bar"
+      className={mode}
+      max={timeout}
+      value={remainingTime}
+    />
+  );
 }
 
 export default TimeoutBar;
