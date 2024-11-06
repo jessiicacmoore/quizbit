@@ -20,7 +20,9 @@ function Quiz () {
   const [userAnswers, setUserAnswers] = useState([]);
 
   let quizStatus;
-  if (!selectedCategory) {
+  if (isFetching) {
+    quizStatus = 'loading';
+  } else if (!selectedCategory) {
     quizStatus = 'selectCategory';
   } else if (userAnswers.length < questions.length) {
     quizStatus = 'showQuestion';
