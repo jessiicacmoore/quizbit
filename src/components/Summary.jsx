@@ -28,7 +28,6 @@ const StyledAnswer = styled.li`
 `
 
 function Summary({ userAnswers, questions, onReset }) {
-  console.log(questions);
   return ( 
     <>
       <Heading>Quiz Complete!</Heading>

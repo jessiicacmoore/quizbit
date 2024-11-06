@@ -8,6 +8,7 @@ export function useQuestions() {
   const [isFetching, setIsFetching] = useState(false);
 
   const loadQuestions = useCallback(async (categoryId) => {
+    setQuestions([]);
     setIsFetching(true);
     const fetchedQuestions = await fetchQuestions(categoryId);
     
