@@ -4,21 +4,23 @@ import Button from '@/components/common/Button';
 import { AVAILABLE_CATEGORIES } from '@/constants/categories.js';
 
 function Categories({ onSelectCategory }) {
-  return ( 
+  return (
     <>
       <Heading>Pick a Category:</Heading>
       <List className="category-list">
-        {AVAILABLE_CATEGORIES.map((category) => {
-          return (
-            <li key={category.id}>
-              <Button className='btn category-btn' onClick={() => onSelectCategory(category.id)}>{category.name}</Button>
-            </li>
-          )
-        })
-        }
+        {AVAILABLE_CATEGORIES.map((category) => (
+          <li key={category.id}>
+            <Button
+              className="btn category-btn"
+              onClick={() => onSelectCategory(category.id)}
+            >
+              {category.name}
+            </Button>
+          </li>
+        ))}
       </List>
     </>
-   );
+  );
 }
 
 export default Categories;
