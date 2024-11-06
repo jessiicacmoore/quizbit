@@ -11,7 +11,7 @@ function Categories({ onSelectCategory }) {
         {AVAILABLE_CATEGORIES.map((category) => {
           return (
             <li key={category.id}>
-              <Button className='btn category-btn' onClick={() => onSelectCategory(category)}>{category.name}</Button>
+              <Button className='btn category-btn' onClick={() => onSelectCategory(category.id)}>{category.name}</Button>
             </li>
           )
         })
